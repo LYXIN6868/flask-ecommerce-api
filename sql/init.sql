@@ -1,0 +1,32 @@
+CREATE DATABASE IF NOT EXISTS flask_shop DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE flask_shop;
+
+DROP TABLE IF EXISTS cart;
+DROP TABLE IF EXISTS goods;
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users (
+  uid INT NOT NULL AUTO_INCREMENT,
+  username VARCHAR(50) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  PRIMARY KEY (uid),
+  UNIQUE KEY uq_users_username (username)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE goods (
+  gid INT NOT NULL AUTO_INCREMENT,
+  goodsname VARCHAR(100) NOT NULL,
+  goodsprice DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (gid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE cart (
+  cid INT NOT NULL AUTO_INCREMENT,
+  uid INT NOT NULL,
+  gid INT NOT NULL,
+  count INT NOT NULL DEFAULT 1,
+  PRIMARY KEY (cid),
+  UNIQUE KEY uq_cart_uid_gid (uid, gid),
+  CONSTRAINT fk_cart_users FOREIGN KEY (uid) REFERENCES users (uid),
+  CONSTRAINT fk_cart_goods FOREIGN KEY (gid) REFERENCES goods (gid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
